@@ -1,0 +1,91 @@
+.home {
+  &__title {
+    color: rgba(0, 0, 0, 0.9);
+    font-size: 22px;
+    font-weight: 600;
+    text-align: center;
+    margin-top: -120px;
+    margin-bottom: 24px;
+  }
+  &__task {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 28px;
+    padding: 20px 0;
+    border-radius: 12px;
+    background: linear-gradient(280deg, #175CE6 0%, #3377FF 100%);
+    color: #FFFFFF;
+    font-size: 18px;
+    font-weight: 600;
+    position: absolute;
+    right: 0;
+    left: 0;
+  }
+  &__contentTip {
+    padding: 12px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.04);
+    font-size: 16px;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.6);
+  }
+  &__contentText {
+    margin-top: 16px;
+    font-size: 16px;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.9);
+    &--text {
+      color: #175CE5
+    }
+  }
+  &__btnContent {
+    display: flex;
+    justify-content: space-between;
+  }
+  &__btn {
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 16px 0;
+    width: 48%;
+    &--disAgree {
+      color: rgba(0, 0, 0, 0.9);
+      border: 0.5px solid rgba(0, 0, 0, 0.15);
+    }
+    &--agree {
+      color: #FFFFFF;
+      background: linear-gradient(286deg, #175CE6 0%, #3377FF 100%);
+    }
+  }
+  // 覆盖组件库样式 
+  .ossa-icon {
+    display: none;
+  }
+  .ossa-actionsheet__container {
+    border-radius: 16px 16px 0px 0px;
+    background: #FFFFFF;
+    box-shadow: 0px -4px 12px 0px rgba(0, 0, 0, 0.04);
+  }
+  .ossa-actionsheet__header {
+    padding: 16px 48px 16px 16px;
+    &::after {
+      border: none;
+    }
+  }
+  .ossa-actionsheet__title {
+    margin: 0;
+    padding: 0;
+    color: rgba(0, 0, 0, 0.9);
+    font-size: 18px;
+    font-weight: 600;
+    text-align: left;
+  }
+  .ossa-actionsheet__content {
+    margin: 0 16px;
+  }
+}

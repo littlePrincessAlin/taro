@@ -9,23 +9,22 @@ export default defineConfig<'webpack5'>(async (merge) => {
   const baseConfig: UserConfigExport<'webpack5'> = {
     projectName: 'myApp',
     date: '2024-11-6',
-    designWidth: 750,
+    designWidth: 375,
     deviceRatio: {
       640: 2.34 / 2,
       750: 1,
-      375: 2,
+      375: 2 / 1,
       828: 1.81 / 2,
     },
     sourceRoot: 'src',
     outputRoot: 'dist',
-    plugins: [],
     defineConstants: {},
     copy: {
       patterns: [],
       options: {},
     },
     framework: 'react',
-    compiler: 'webpack5',
+    compiler: { type: 'webpack5', prebundle: { enable: false } },
     cache: {
       enable: false, // Webpack 持久化缓存配置，建议开启。默认配置请参考：https://docs.taro.zone/docs/config-detail#cache
     },
@@ -33,6 +32,7 @@ export default defineConfig<'webpack5'>(async (merge) => {
       '@': path.resolve(__dirname, '..', 'src'),
       '@utils': path.resolve(__dirname, '..', 'src/utils'),
     },
+    plugins: ['@tarojs/plugin-html'],
     mini: {
       postcss: {
         pxtransform: {
@@ -54,6 +54,7 @@ export default defineConfig<'webpack5'>(async (merge) => {
     h5: {
       publicPath: '/',
       staticDirectory: 'static',
+      esnextModules: ['ossaui'],
       output: {
         filename: 'js/[name].[hash:8].js',
         chunkFilename: 'js/[name].[chunkhash:8].js',

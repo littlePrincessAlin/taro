@@ -2,10 +2,26 @@
 // https://github.com/NervJS/taro/blob/next/packages/babel-preset-taro/README.md
 module.exports = {
   presets: [
-    ['taro', {
-      framework: 'react',
-      ts: true,
-      compiler: 'webpack5',
-    }]
-  ]
-}
+    [
+      'taro',
+      {
+        framework: 'react',
+        ts: true,
+        compiler: 'webpack5',
+      },
+    ],
+  ],
+  plugins: [
+    [
+      'import',
+      {
+        libraryName: 'ossaui',
+        customName: (name) =>
+          `ossaui/lib/components/${name.replace(/^os-/, '')}`,
+        customStyleName: (name) =>
+          `ossaui/dist/style/components/${name.replace(/^os-/, '')}.scss`,
+      },
+      'ossaui',
+    ],
+  ],
+};

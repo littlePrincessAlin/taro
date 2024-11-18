@@ -3,5 +3,6 @@
   "projectname": "lilin",
   "setting": {
     "compileHotReLoad": true
-  }
+  },
+  "libVersion": "3.6.4"
 }
