@@ -1,14 +1,17 @@
 .login {
-//   &__navBar {
-//     width: 100%;
-//     height: 30%;
-//     background: url('@/assets/loginBanner.png') no-repeat;
-//     background-size: 100%;
-//   }
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  &__navBar {
+    width: 100%;
+    height: 292px;
+    background: url('https://h5.yueyuechuxing.cn/pintu/imgs/65e7dba45e445c7eb22ce0c04386cf4b.png') no-repeat;
+    background-size: 100%;
+  }
   &__header {
     position: absolute;
-    left: 24px;
     top: 88px;
+    padding: 0 24px;
     &--name {
       color: rgba(0, 0, 0, 0.9);
       font-size: 32px;
@@ -26,15 +29,40 @@
       font-weight: 400;
     }
   }
+  &__input {
+    padding: 8px 12px 4px;
+    box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.08);
+    background: #FFFFFF;
+    border-radius: 12px;
+    margin-bottom: 16px;
+  }
   &__content {
-    position: absolute;
-    left: 0;
-    right: 0;
-    margin-top: -70px;
+    margin-top: -40px;
     border-radius: 16px 16px 0px 0px;
     box-shadow: 0px -8px 24px 0px rgba(0, 0, 0, 0.06);
     background: #FFFFFF;
     padding: 32px 28px;
-    height: 60%;
+    flex: 1;
+    &--agree {
+      margin-bottom: 16px;
+    }
+    &--text {
+      color: #175CE5
+    }
+  }
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 28px;
+    padding: 18px 0;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.09);
+    color: rgba(0, 0, 0, 0.2);
+    font-size: 18px;
+    font-weight: 600;
+    position: absolute;
+    left: 0;
+    right: 0;
   }
 }

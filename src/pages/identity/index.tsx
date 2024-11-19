@@ -2,11 +2,11 @@ import { View } from '@tarojs/components';
 import { useLoad, hideHomeButton } from '@tarojs/taro';
 import './index.scss';
 
-export default function Agreement() {
+export default function Identity() {
   useLoad(() => {});
   return (
     <View>
-      <View>隐私协议</View>
+      <View>验证</View>
     </View>
   );
 }

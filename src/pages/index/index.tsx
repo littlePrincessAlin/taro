@@ -1,4 +1,4 @@
-import { View, Text, CoverImage } from '@tarojs/components';
+import { View, Text } from '@tarojs/components';
 import {
   useRouter,
   useLoad,
@@ -10,7 +10,6 @@ import {
 } from '@tarojs/taro';
 import { useState } from 'react';
 import { OsActionsheet } from 'ossaui';
-import tabBar from '@/assets/banner.png';
 import './index.scss';
 
 export default function Index() {
@@ -85,7 +84,7 @@ export default function Index() {
   return (
     tenentId && (
       <View className="home">
-        <CoverImage className="home__navBar" src={tabBar} />
+        <View className="home__navBar"></View>
         <View className="home__title">欢迎来到「司机培训中心」</View>
         <View className="home__task" onClick={goTask}>
           参加培训

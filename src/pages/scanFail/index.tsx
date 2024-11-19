@@ -1,16 +1,15 @@
-import { View, CoverImage } from '@tarojs/components';
+import { View } from '@tarojs/components';
 import { useLoad, hideHomeButton } from '@tarojs/taro';
-import tabBar from '@/assets/navBar.png';
 import './index.scss';
 
-export default function ErrorPage() {
+export default function ScanFail() {
   useLoad(() => {
     hideHomeButton();
   });
   return (
-    <View>
+    <View className="scanFail">
       <View>sss</View>
-      <CoverImage src={tabBar} />
+      <View className="scanFail__navBar"></View>
     </View>
   );
 }

@@ -1,15 +1,22 @@
-import { View, CoverImage } from '@tarojs/components';
+import { View } from '@tarojs/components';
 import { useLoad, hideHomeButton } from '@tarojs/taro';
-import tabBar from '@/assets/loginBanner.png';
+import { useState } from 'react';
 import './index.scss';
 
-export default function ErrorPage() {
+export default function Login() {
+  const [phone, setPhone] = useState('');
+  const [isAgree, setIsAgree] = useState([1]);
+
+  // 选择同意
+  const handleClick = () => {
+    setIsAgree([0]);
+  };
   useLoad(() => {
     hideHomeButton();
   });
   return (
     <View className="login">
-      <CoverImage src={tabBar} />
+      <View className="login__navBar"></View>
       <View className="login__header">
         <View className="login__header--name">约约出行</View>
         <View className="login__header--title">直播培训签到</View>
@@ -17,11 +24,7 @@ export default function ErrorPage() {
           请您输入您的出车手机号进行直播签到
         </View>
       </View>
-      <View className="login__content">
-        <View>请输入您的出车手机号码</View>
-        <View>同意《隐私协议》</View>
-        <View>下一步</View>
-      </View>
+      <View className="login__content"></View>
     </View>
   );
 }
