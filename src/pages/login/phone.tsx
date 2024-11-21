@@ -1,5 +1,6 @@
 import { View, Text, Input } from '@tarojs/components';
 import { useState } from 'react';
+import { navigateTo } from '@tarojs/taro';
 import BlmButton from '@/components/button';
 import './index.scss';
 
@@ -11,10 +12,21 @@ export default function Phone() {
   const handleAgree = () => {
     setIsAgree(!isAgree);
   };
+  // 前往隐私协议
+  const goAgreement = () => {
+    navigateTo({
+      url: '/pages/agreement/index',
+    });
+  };
 
   // 下一步
   const handleNext = () => {
     console.log('下一步');
+    if (isAgree) {
+    }
+    // navigateTo({
+    //   url: '/pages/identity/index',
+    // });
   };
 
   return (
@@ -32,7 +44,10 @@ export default function Phone() {
           }`}
         ></View>
         <View>
-          同意<Text className="phone__text">《隐私协议》</Text>
+          同意
+          <Text className="phone__text" onClick={goAgreement}>
+            《隐私协议》
+          </Text>
         </View>
       </View>
       <View className="phone__footer">
