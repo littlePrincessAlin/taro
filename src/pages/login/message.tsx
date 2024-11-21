@@ -5,8 +5,8 @@ import './index.scss';
 export default function Message() {
   useLoad(() => {});
   return (
-    <View>
+    <>
       <View>短信验证</View>
-    </View>
+    </>
   );
 }
