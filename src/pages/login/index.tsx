@@ -65,10 +65,13 @@ export default function Login() {
             <View className="login__header--name">约约出行</View>
             <View className="login__header--title">直播培训签到</View>
             <View className="login__header--subTitle">
-              请您输入您的出车手机号进行直播签到
+              {false
+                ? '请您输入您的出车手机号进行直播签到'
+                : '验证码已发送至 18888888888'}
             </View>
           </View>
           <View className="login__content">
+            {/* <Message /> */}
             <Phone />
           </View>
         </View>

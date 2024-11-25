@@ -10,6 +10,8 @@ export default defineAppConfig({
     'pages/task/index',
     // 隐私协议
     'pages/agreement/index',
+    // 身份证验证、图片验证
+    'pages/identity/index',
   ],
   __usePrivacyCheck__: true,
   window: {

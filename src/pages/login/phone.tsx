@@ -31,9 +31,8 @@ export default function Phone() {
   };
   // 输入手机号
   const handlePhoneInput = (event) => {
-    const { value = '', keyCode } = event?.detail || {};
+    const { value = '' } = event?.detail || {};
     const numberVal = value.replace(/[^0-9]/g, ''); // 去除非数字元素
-    console.log('keyCode', keyCode, numberVal);
     setPhone(numberVal);
     checkPhone(numberVal);
   };
@@ -51,20 +50,25 @@ export default function Phone() {
   // 下一步
   const handleNext = () => {
     console.log('下一步');
-    if (isAgree) {
-    }
+    navigateTo({
+      url: '/pages/live/index',
+    });
     // navigateTo({
-    //   url: '/pages/identity/index',
+    //   url: '/pages/identity/index?fromSource=imageCode',
     // });
   };
 
   useEffect(() => {
-    if (!phone.length) return;
-    const showValue = `${phone.slice(0, 3)} ${phone.slice(3, 7)} ${phone.slice(
-      7,
-      phone.length,
-    )}`;
-    console.log(showValue, 'phone');
+    if (!phone.length) {
+      setShowPhone('');
+      return;
+    }
+    const first = phone.slice(0, 3).length ? phone.slice(0, 3) : '';
+    const second = phone.slice(3, 7).length ? ` ${phone.slice(3, 7)}` : '';
+    const third = phone.slice(7, phone.length).length
+      ? ` ${phone.slice(7, phone.length)}`
+      : '';
+    const showValue = `${first}${second}${third}`;
     setShowPhone(showValue);
   }, [phone]);
 
