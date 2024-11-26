@@ -1,0 +1,51 @@
+.dialog {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    &__mask {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      background: rgba(0, 0, 0, 0.75);
+    }
+    &__container {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.04);
+      background: #FFFFFF;
+      border-radius: 16px;
+      padding: 16px;
+      width: 295px;
+    }
+    &__title {
+      font-size: 18px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.9);
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    &__btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 48px;
+      width: 100%;
+      &--left {
+        border: 0.5px solid rgba(0, 0, 0, 0.15);
+        border-radius: 12px;
+        height: 48px;
+        width: 45%;
+        margin-right: 12px;
+      }
+      &--right {
+        flex: 1;
+        height: 48px;
+      }
+    }
+  }

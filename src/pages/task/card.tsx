@@ -1,6 +1,7 @@
 import { View } from '@tarojs/components';
 import { useState } from 'react';
 import BlmButton from '@/components/button';
+import BlmDialog from '@/components/dialog';
 import './index.scss';
 
 interface CardProps {
@@ -10,13 +11,16 @@ interface CardProps {
 
 export default function Card(props: CardProps) {
   const { isLogin } = props || {};
-  const [showDialog, setShowDialog] = useState(false);
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
   const handleClick = () => {
-    if (isLogin) {
+    if (false) {
       // 前往直播间
     } else {
-      setShowDialog(true);
+      setShowLoginDialog(true);
     }
+  };
+  const closeDialog = () => {
+    setShowLoginDialog(false);
   };
   return (
     <View className="card">
@@ -39,6 +43,13 @@ export default function Card(props: CardProps) {
           titleColor={isLogin ? '#FFFFFF' : '#175CE5'}
         ></BlmButton>
       </View>
+      <BlmDialog
+        isShow={showLoginDialog}
+        closeDialog={closeDialog}
+        confirmBtnClick={closeDialog}
+        title="签到失败，请添加培训师为好友后再签到"
+        confirmBtnText="确定"
+      ></BlmDialog>
     </View>
   );
 }
