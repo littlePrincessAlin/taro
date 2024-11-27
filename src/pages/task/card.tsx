@@ -1,27 +1,16 @@
 import { View } from '@tarojs/components';
-import { useState } from 'react';
 import BlmButton from '@/components/button';
-import BlmDialog from '@/components/dialog';
 import './index.scss';
 
 interface CardProps {
   isLogin: boolean;
+  handleClick: () => void;
   key?: any;
 }
 
 export default function Card(props: CardProps) {
-  const { isLogin } = props || {};
-  const [showLoginDialog, setShowLoginDialog] = useState(false);
-  const handleClick = () => {
-    if (false) {
-      // 前往直播间
-    } else {
-      setShowLoginDialog(true);
-    }
-  };
-  const closeDialog = () => {
-    setShowLoginDialog(false);
-  };
+  const { isLogin, handleClick } = props || {};
+
   return (
     <View className="card">
       <View className="card__time">直播开始时间：2024年11月1日 18:00</View>
@@ -43,13 +32,6 @@ export default function Card(props: CardProps) {
           titleColor={isLogin ? '#FFFFFF' : '#175CE5'}
         ></BlmButton>
       </View>
-      <BlmDialog
-        isShow={showLoginDialog}
-        closeDialog={closeDialog}
-        confirmBtnClick={closeDialog}
-        title="签到失败，请添加培训师为好友后再签到"
-        confirmBtnText="确定"
-      ></BlmDialog>
     </View>
   );
 }

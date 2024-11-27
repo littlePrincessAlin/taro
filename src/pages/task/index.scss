@@ -1,7 +1,4 @@
 .task {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
   &__back {
     position: absolute;
     top: 54px;
@@ -11,13 +8,17 @@
   }
   &__navBar {
     width: 100%;
-    height: 126px;
+    height: 112px;
     background: url('https://h5.yueyuechuxing.cn/pintu/imgs/b01f3aa9476e3efe4c4762b44cd67294.png') no-repeat;
     background-size: 100%;
   }
   &__content {
-    flex: 1;
-    padding: 32px 20px 25px;
+    position: absolute;
+    top: 108px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 32px 20px;
     border-radius: 16px 16px 0px 0px;
     background: #FFFFFF;
     box-shadow: 0px -8px 24px 0px rgba(0, 0, 0, 0.06);

@@ -1,13 +1,16 @@
 import { View, ScrollView } from '@tarojs/components';
-import { startPullDownRefresh } from '@tarojs/taro';
-import { useState } from 'react';
+import { navigateBack } from '@tarojs/taro';
+import { useState, useEffect } from 'react';
 import BlmButton from '@/components/button';
 import BlmDialog from '@/components/dialog';
 import Card from './card';
 import './index.scss';
 
 export default function Task() {
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
   const [showCheckOutDialog, setShowCheckOutDialog] = useState(false);
+
+  const [refresherTriggered, setRefresherTriggered] = useState(false);
   const refresh = () => {
     console.log('refresh');
   };
@@ -16,18 +19,29 @@ export default function Task() {
   const handleCheckOut = () => {
     setShowCheckOutDialog(true);
   };
-  const closeDialog = () => {
-    setShowCheckOutDialog(false);
-  };
-  // 退出登陆弹窗确认
-  const confirmBtnClick = () => {};
 
-  // 坚听下拉刷新
-  startPullDownRefresh({
-    complete: () => {
-      refresh();
-    },
-  });
+  const handleClick = () => {
+    if (false) {
+      // 前往直播间
+    } else {
+      setShowLoginDialog(true);
+    }
+  };
+
+  // 退出登陆弹窗确认
+  const confirmBtnClick = () => {
+    navigateBack({
+      delta: 1,
+    });
+  };
+
+  const onRefresherRefresh = () => {
+    setRefresherTriggered(true);
+    console.log('!!!');
+    setTimeout(() => {
+      setRefresherTriggered(false);
+    }, 1000);
+  };
 
   return (
     <View className="task">
@@ -39,19 +53,30 @@ export default function Task() {
       ></img>
       <View className="task__content">
         {true ? (
-          <ScrollView scrollY className="task__content--scroll">
+          <ScrollView
+            scrollY
+            enhanced
+            refresherEnabled
+            refresherTriggered={refresherTriggered}
+            className="task__content--scroll"
+            onRefresherRefresh={onRefresherRefresh}
+            showScrollbar={false}
+            scrollTop={0}
+            lowerThreshold={20}
+            upperThreshold={20}
+          >
             <View className="task__content--title">
               您好，师傅<View>请选择您要签到的直播培训</View>
             </View>
             <View>
               <View className="task__content--subTitle">新手司机培训</View>
               {[1, 2, 3].map((item) => {
-                return <Card isLogin key={item} />;
+                return <Card isLogin key={item} handleClick={handleClick} />;
               })}
             </View>
-            <View>
+            <View className="task__content--old">
               <View className="task__content--subTitle">老手回炉</View>
-              <Card isLogin={false} />
+              <Card isLogin={false} handleClick={handleClick} />
             </View>
           </ScrollView>
         ) : (
@@ -66,11 +91,18 @@ export default function Task() {
       </View>
       <BlmDialog
         isShow={showCheckOutDialog}
-        closeDialog={closeDialog}
-        cancelBtnClick={closeDialog}
+        closeDialog={() => setShowCheckOutDialog(false)}
+        cancelBtnClick={() => setShowCheckOutDialog(false)}
         confirmBtnClick={confirmBtnClick}
         title="确定退出登录吗？"
         cancelBtnText="取消"
+        confirmBtnText="确定"
+      ></BlmDialog>
+      <BlmDialog
+        isShow={showLoginDialog}
+        closeDialog={() => setShowLoginDialog(false)}
+        confirmBtnClick={() => setShowLoginDialog(false)}
+        title="签到失败，请添加培训师为好友后再签到"
         confirmBtnText="确定"
       ></BlmDialog>
     </View>
