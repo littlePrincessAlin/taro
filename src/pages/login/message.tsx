@@ -1,7 +1,8 @@
 import { View, Input } from '@tarojs/components';
-import { navigateTo } from '@tarojs/taro';
+import { navigateTo, getStorage } from '@tarojs/taro';
 import { useEffect, useState } from 'react';
 import BlmButton from '@/components/button';
+import { fetchLogin } from '@/services/index';
 import './index.scss';
 
 const maxlength = 4;
@@ -11,8 +12,24 @@ export default function Message() {
   const [countDown, setCountDown] = useState(30);
   const [messageCode, setMessageCode] = useState('');
   const [isFocus, setIsFocus] = useState(false);
+
   // 确定
-  const handleConfirm = () => {};
+  const handleConfirm = () => {
+    getStorage({
+      key: 'blmUserCode',
+      fail: () => {},
+      success: async (res) => {
+        const loginRes = await fetchLogin({
+          driverMobile: '15511110001',
+          verifyType: 1,
+          verifyCode: '1234',
+          tenantId: 1,
+          userAuthCode: res.data,
+        });
+        console.log('loginRes', loginRes);
+      },
+    });
+  };
 
   // 输入验证码
   const handleInput = (event) => {

@@ -19,7 +19,7 @@ export default function Login() {
   const [needAuthorization, setNeedAuthorization] = useState(false);
   // 获取路由
   const router = useRouter();
-  const { tenentId = '1' } = router.params;
+  const { tenentId = '1', imgIdentity = '' } = router.params;
   // 登陆
   const handleLogin = () => {
     login({
@@ -27,7 +27,7 @@ export default function Login() {
         if (loginRes?.code) {
           // 记录code码，后面登陆时给服务获取 session_key、unionid、openid ==> token
           setStorage({
-            key: 'blmCode',
+            key: 'blmUserCode',
             data: loginRes.code,
           });
         } else {
@@ -54,6 +54,7 @@ export default function Login() {
       return;
     }
     handleSetting();
+    handleLogin();
   });
 
   return (
@@ -65,14 +66,14 @@ export default function Login() {
             <View className="login__header--name">约约出行</View>
             <View className="login__header--title">直播培训签到</View>
             <View className="login__header--subTitle">
-              {false
+              {imgIdentity === 'success'
                 ? '请您输入您的出车手机号进行直播签到'
                 : '验证码已发送至 18888888888'}
             </View>
           </View>
           <View className="login__content">
-            {/* <Message /> */}
-            <Phone />
+            <Message />
+            {/* <Phone /> */}
           </View>
         </View>
         {/* 隐私协议 */}

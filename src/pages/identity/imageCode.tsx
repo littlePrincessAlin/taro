@@ -1,6 +1,7 @@
 import { View, Input } from '@tarojs/components';
-import { useLoad, hideHomeButton } from '@tarojs/taro';
+import { redirectTo } from '@tarojs/taro';
 import { useEffect, useState } from 'react';
+import { pictureGet } from '@/services/index';
 import './index.scss';
 
 const maxlength = 4;
@@ -9,7 +10,13 @@ export default function ImageCode() {
   const [isFocus, setIsFocus] = useState(false);
   const handleInput = (event) => {
     const { value = '' } = event?.detail || {};
+    console.log('value: ', value);
     setImageCode(value);
+    if (false) {
+      redirectTo({
+        url: '/pages/login/index?imgIdentity=success',
+      });
+    }
   };
   const onFocus = () => {
     setIsFocus(true);
@@ -17,7 +24,15 @@ export default function ImageCode() {
   const handleBlur = () => {
     setIsFocus(false);
   };
-  useLoad(() => {});
+
+  const fetchImg = async () => {
+    const res = await pictureGet();
+    console.log(res, '?????');
+  };
+
+  useEffect(() => {
+    fetchImg();
+  }, []);
   return (
     <View className="imageCode">
       <View className="imageCode__title">请输入图形验证码</View>
