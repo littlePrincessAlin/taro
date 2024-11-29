@@ -1,21 +1,41 @@
 import { View, Input } from '@tarojs/components';
-import { redirectTo } from '@tarojs/taro';
+import { redirectTo, useRouter, showToast } from '@tarojs/taro';
 import { useEffect, useState } from 'react';
-import { pictureGet } from '@/services/index';
+import { pictureGet, pictureCheck } from '@/services/index';
 import './index.scss';
 
 const maxlength = 4;
 export default function ImageCode() {
   const [imageCode, setImageCode] = useState('');
   const [isFocus, setIsFocus] = useState(false);
-  const handleInput = (event) => {
+  const [image, setImage] = useState('');
+  // 获取路由
+  const router = useRouter();
+  const { mobile = '', tenantId = '' } = router.params;
+
+  const handleInput = async (event) => {
     const { value = '' } = event?.detail || {};
     console.log('value: ', value);
     setImageCode(value);
-    if (false) {
-      redirectTo({
-        url: '/pages/login/index?imgIdentity=success',
+    if (value.length === maxlength) {
+      const checkRes = await pictureCheck({
+        mobile,
+        verifyCode: value,
       });
+      console.log('checkRes:', checkRes);
+      const { data, msg } = checkRes?.data || {};
+      if (1) {
+        redirectTo({
+          url: `/pages/login/index?imgIdentity=success&driverMobile=${mobile}&tenantId=${tenantId}`,
+        });
+      } else {
+        showToast({
+          title: msg,
+          icon: 'none',
+          duration: 2000,
+        });
+        setImageCode('');
+      }
     }
   };
   const onFocus = () => {
@@ -24,22 +44,31 @@ export default function ImageCode() {
   const handleBlur = () => {
     setIsFocus(false);
   };
+  const handleRefresh = () => {
+    fetchImg();
+    setImageCode('');
+  };
 
   const fetchImg = async () => {
-    const res = await pictureGet();
-    console.log(res, '?????');
+    const res = await pictureGet({ mobile });
+    const { data } = res?.data || {};
+    console.log('获取图片:', data);
+    data && setImage('data:image/png;base64,' + data);
   };
 
   useEffect(() => {
     fetchImg();
   }, []);
+
   return (
     <View className="imageCode">
       <View className="imageCode__title">请输入图形验证码</View>
       <View className="imageCode__img">
-        <img src="https://h5.yueyuechuxing.cn/pintu/imgs/65e7dba45e445c7eb22ce0c04386cf4b.png"></img>
+        <img src={image}></img>
       </View>
-      <View className="imageCode__subTitle">点击图片刷新</View>
+      <View className="imageCode__subTitle" onClick={handleRefresh}>
+        点击图片刷新
+      </View>
       <View className="imageCode__content">
         <View className="imageCode__content--input">
           <Input

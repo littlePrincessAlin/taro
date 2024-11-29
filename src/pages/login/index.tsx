@@ -2,13 +2,15 @@ import { View } from '@tarojs/components';
 import {
   useRouter,
   useLoad,
+  getStorage,
   setStorage,
   login,
   redirectTo,
-  navigateTo,
+  showToast,
   getPrivacySetting,
 } from '@tarojs/taro';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { sendCode } from '@/services/index';
 import PrivateSetting from '@/components/privateSetting';
 import Message from './message';
 import Phone from './phone';
@@ -19,7 +21,9 @@ export default function Login() {
   const [needAuthorization, setNeedAuthorization] = useState(false);
   // 获取路由
   const router = useRouter();
-  const { tenentId = '1', imgIdentity = '' } = router.params;
+  const { tenantId = '1', imgIdentity = '', driverMobile = '' } = router.params;
+  // 当前手机号
+  const [phone, setPhone] = useState('');
   // 登陆
   const handleLogin = () => {
     login({
@@ -44,21 +48,65 @@ export default function Login() {
       },
     });
   };
+  // 获取手机号
+  const handlePhone = (val) => {
+    setPhone(val);
+  };
 
   useLoad(() => {
     // 先判断二维码是否携带租户id
-    if (!tenentId) {
+    if (!tenantId) {
       redirectTo({
         url: '/pages/scanFail/index',
       });
       return;
     }
+    setStorage({
+      key: 'tenantId',
+      data: tenantId,
+    });
     handleSetting();
-    handleLogin();
+    // 查看缓存
+    getStorage({
+      key: 'blmToken',
+      fail: (err) => {
+        handleLogin();
+      },
+      success: async (res) => {
+        console.log('token:', res.data);
+        // 如果有缓存直接重定向到任务页
+        if (res?.data) {
+          redirectTo({
+            url: '/pages/task/index',
+          });
+        } else {
+          handleLogin();
+        }
+      },
+    });
   });
 
+  useEffect(() => {
+    if (imgIdentity === 'success') {
+      sendCode({
+        mobile: driverMobile,
+        tenantId,
+      }).then((res) => {
+        console.log('获取短信验证码:', res.data);
+        const { data, msg } = res?.data || {};
+        if (!data) {
+          showToast({
+            title: msg,
+            icon: 'none',
+            duration: 2000,
+          });
+        }
+      });
+    }
+  }, [imgIdentity]);
+
   return (
-    tenentId && (
+    tenantId && (
       <View>
         <View className="login">
           <View className="login__navBar"></View>
@@ -67,13 +115,16 @@ export default function Login() {
             <View className="login__header--title">直播培训签到</View>
             <View className="login__header--subTitle">
               {imgIdentity === 'success'
-                ? '请您输入您的出车手机号进行直播签到'
-                : '验证码已发送至 18888888888'}
+                ? `验证码已发送至 ${phone}`
+                : '请您输入您的出车手机号进行直播签到'}
             </View>
           </View>
           <View className="login__content">
-            <Message />
-            {/* <Phone /> */}
+            {imgIdentity === 'success' ? (
+              <Message driverMobile={driverMobile} tenantId={tenantId} />
+            ) : (
+              <Phone handlePhone={handlePhone} tenantId={tenantId} />
+            )}
           </View>
         </View>
         {/* 隐私协议 */}

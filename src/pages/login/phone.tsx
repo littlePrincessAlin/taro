@@ -10,7 +10,8 @@ const CALL =
 const maxlength = 13;
 
 // 电话号码登陆
-export default function Phone() {
+export default function Phone(props) {
+  const { handlePhone, tenantId } = props || {};
   const [phone, setPhone] = useState('');
   const [showPhone, setShowPhone] = useState('');
   const [isAgree, setIsAgree] = useState(false);
@@ -49,13 +50,26 @@ export default function Phone() {
 
   // 下一步
   const handleNext = () => {
-    console.log('下一步');
+    if (!phone) {
+      showToast({
+        title: '请输入手机号',
+        icon: 'none',
+        duration: 2000,
+      });
+      return;
+    }
+    if (!isAgree) {
+      showToast({
+        title: '请同意隐私协议',
+        icon: 'none',
+        duration: 2000,
+      });
+      return;
+    }
+    handlePhone(phone);
     navigateTo({
-      url: '/pages/live/index',
+      url: `/pages/identity/index?fromSource=imageCode&mobile=${phone}&tenantId=${tenantId}`,
     });
-    // navigateTo({
-    //   url: '/pages/identity/index?fromSource=imageCode',
-    // });
   };
 
   useEffect(() => {

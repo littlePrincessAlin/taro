@@ -1,5 +1,11 @@
 import { View, Input } from '@tarojs/components';
-import { navigateTo, getStorage } from '@tarojs/taro';
+import {
+  navigateTo,
+  getStorage,
+  redirectTo,
+  showToast,
+  setStorage,
+} from '@tarojs/taro';
 import { useEffect, useState } from 'react';
 import BlmButton from '@/components/button';
 import { fetchLogin } from '@/services/index';
@@ -8,7 +14,8 @@ import './index.scss';
 const maxlength = 4;
 let timer;
 
-export default function Message() {
+export default function Message(props) {
+  const { driverMobile, verifyCode, tenantId } = props;
   const [countDown, setCountDown] = useState(30);
   const [messageCode, setMessageCode] = useState('');
   const [isFocus, setIsFocus] = useState(false);
@@ -20,13 +27,29 @@ export default function Message() {
       fail: () => {},
       success: async (res) => {
         const loginRes = await fetchLogin({
-          driverMobile: '15511110001',
+          tenantId,
+          driverMobile,
           verifyType: 1,
-          verifyCode: '1234',
-          tenantId: 1,
+          verifyCode: messageCode,
           userAuthCode: res.data,
         });
         console.log('loginRes', loginRes);
+        const { data, msg } = loginRes?.data || {};
+        if (!data) {
+          showToast({
+            title: msg,
+            icon: 'none',
+            duration: 2000,
+          });
+        } else {
+          setStorage({
+            key: 'blmToken',
+            data,
+          });
+          redirectTo({
+            url: '/pages/task/index',
+          });
+        }
       },
     });
   };
