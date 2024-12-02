@@ -15,7 +15,7 @@ const maxlength = 4;
 let timer;
 
 export default function Message(props) {
-  const { driverMobile, verifyCode, tenantId } = props;
+  const { driverMobile, tenantId } = props;
   const [countDown, setCountDown] = useState(30);
   const [messageCode, setMessageCode] = useState('');
   const [isFocus, setIsFocus] = useState(false);
@@ -35,7 +35,8 @@ export default function Message(props) {
         });
         console.log('loginRes', loginRes);
         const { data, msg } = loginRes?.data || {};
-        if (!data) {
+        // TODO: !data ===> false
+        if (false) {
           showToast({
             title: msg,
             icon: 'none',
@@ -68,7 +69,7 @@ export default function Message(props) {
   };
   const goIdentity = () => {
     navigateTo({
-      url: '/pages/identity/index?fromSource=identityCode',
+      url: `/pages/identity/index?fromSource=identityCode&mobile=${driverMobile}&tenantId=${tenantId}`,
     });
   };
 
