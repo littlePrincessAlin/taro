@@ -88,6 +88,11 @@ export default function Login() {
 
   useEffect(() => {
     if (imgIdentity === 'success') {
+      showToast({
+        title: '短信验证码已发送',
+        icon: 'none',
+        duration: 2000,
+      });
       sendCode({
         mobile: driverMobile,
         tenantId,

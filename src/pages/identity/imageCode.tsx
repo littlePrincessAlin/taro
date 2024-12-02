@@ -1,11 +1,21 @@
 import { View, Input } from '@tarojs/components';
-import { redirectTo, useRouter, showToast } from '@tarojs/taro';
+import {
+  redirectTo,
+  useRouter,
+  showToast,
+  showLoading,
+  hideLoading,
+  onNetworkStatusChange,
+  offNetworkStatusChange,
+} from '@tarojs/taro';
 import { useEffect, useState } from 'react';
+import PageLoading from '@/components/pageLoading';
 import { pictureGet, pictureCheck } from '@/services/index';
 import './index.scss';
 
 const maxlength = 4;
 export default function ImageCode() {
+  const [pageType, setPageType] = useState('empty');
   const [imageCode, setImageCode] = useState('');
   const [isFocus, setIsFocus] = useState(false);
   const [image, setImage] = useState('');
@@ -18,6 +28,9 @@ export default function ImageCode() {
     console.log('value: ', value);
     setImageCode(value);
     if (value.length === maxlength) {
+      showLoading({
+        title: '正在校验',
+      });
       const checkRes = await pictureCheck({
         mobile,
         verifyCode: value,
@@ -36,6 +49,7 @@ export default function ImageCode() {
         });
         setImageCode('');
       }
+      hideLoading();
     }
   };
   const onFocus = () => {
@@ -45,22 +59,41 @@ export default function ImageCode() {
     setIsFocus(false);
   };
   const handleRefresh = () => {
-    fetchImg();
     setImageCode('');
+    fetchImg();
   };
 
   const fetchImg = async () => {
+    setPageType('empty');
     const res = await pictureGet({ mobile });
     const { data } = res?.data || {};
     console.log('获取图片:', data);
-    data && setImage('data:image/png;base64,' + data);
+    if (data) {
+      setImage('data:image/png;base64,' + data);
+      setPageType('');
+    } else {
+      setPageType('abnormal');
+    }
   };
 
   useEffect(() => {
+    // 监听网络状态
+    onNetworkStatusChange((res) => {
+      const { isConnected } = res || {};
+      console.log('???', isConnected);
+      if (!isConnected) {
+        setPageType('offline');
+      }
+    });
     fetchImg();
+    return () => {
+      offNetworkStatusChange();
+    };
   }, []);
 
-  return (
+  return pageType ? (
+    <PageLoading type={pageType} refresh={handleRefresh} />
+  ) : (
     <View className="imageCode">
       <View className="imageCode__title">请输入图形验证码</View>
       <View className="imageCode__img">

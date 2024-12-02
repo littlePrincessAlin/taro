@@ -1,6 +1,16 @@
 import { View, ScrollView } from '@tarojs/components';
-import { navigateBack, showToast, navigateToMiniProgram } from '@tarojs/taro';
+import {
+  navigateBack,
+  showToast,
+  navigateToMiniProgram,
+  showLoading,
+  hideLoading,
+  onNetworkStatusChange,
+  offNetworkStatusChange,
+  clearStorage,
+} from '@tarojs/taro';
 import { useState, useEffect } from 'react';
+import PageLoading from '@/components/pageLoading';
 import { getTaskList, checkIn, logout, getLivingCode } from '@/services/index';
 import BlmButton from '@/components/button';
 import BlmDialog from '@/components/dialog';
@@ -8,14 +18,11 @@ import Card from './card';
 import './index.scss';
 
 export default function Task() {
+  const [pageType, setPageType] = useState('empty');
   const [showLoginDialog, setShowLoginDialog] = useState(false);
   const [showCheckOutDialog, setShowCheckOutDialog] = useState(false);
   const [refresherTriggered, setRefresherTriggered] = useState(false);
   const [list, setList] = useState([]) as any;
-  const refresh = () => {
-    console.log('refresh');
-    fetchData();
-  };
 
   const handleClick = async (item) => {
     const { signStatus, livingId } = item || {};
@@ -29,6 +36,9 @@ export default function Task() {
 
   // 前往直播间
   const handleLiving = async (livingId) => {
+    showLoading({
+      title: '加载中',
+    });
     const res = await getLivingCode({ livingId });
     const { data } = res?.data || {};
     data &&
@@ -53,10 +63,14 @@ export default function Task() {
         icon: 'none',
         duration: 2000,
       });
+    hideLoading();
   };
 
   // 签到
   const handleCheckIn = async (item) => {
+    showLoading({
+      title: '加载中',
+    });
     const { livingId, taskId } = item || {};
     const res = await checkIn({
       taskId,
@@ -74,6 +88,7 @@ export default function Task() {
       // 签到失败
       setShowLoginDialog(true);
     }
+    hideLoading();
   };
 
   // 退出登陆
@@ -82,9 +97,14 @@ export default function Task() {
   };
   // 退出登陆弹窗确认
   const confirmBtnClick = async () => {
+    showLoading({
+      title: '加载中',
+    });
     const res = await logout();
     const { data } = res?.data || {};
     if (data) {
+      // 清空缓存
+      clearStorage();
       setShowCheckOutDialog(false);
       navigateBack({
         delta: 1,
@@ -96,30 +116,55 @@ export default function Task() {
         duration: 2000,
       });
     }
+    hideLoading();
   };
 
-  const onRefresherRefresh = () => {
+  // 无任务刷新
+  const refresh = () => {
+    fetchData();
+  };
+  // 下拉刷新
+  const onRefresherRefresh = async () => {
     setRefresherTriggered(true);
-    console.log('!!!');
-    setTimeout(() => {
-      setRefresherTriggered(false);
-    }, 1000);
+    const res = await getTaskList();
+    const { data = [] } = res?.data || {};
+    if (Array.isArray(data) && data.length) {
+      setList(data);
+    }
+    setRefresherTriggered(false);
   };
-
+  // 获取数据
   const fetchData = async () => {
+    setPageType('empty');
     const res = await getTaskList();
     console.log('获取直播间数据', res);
     const { data = [] } = res?.data || {};
     if (Array.isArray(data) && data.length) {
       setList(data);
+      setPageType('');
+    } else {
+      setPageType('abnormal');
     }
   };
 
   useEffect(() => {
+    // 监听网络状态
+    onNetworkStatusChange((res) => {
+      const { isConnected } = res || {};
+      console.log('???', isConnected);
+      if (!isConnected) {
+        setPageType('offline');
+      }
+    });
     fetchData();
+    return () => {
+      offNetworkStatusChange();
+    };
   }, []);
 
-  return (
+  return pageType ? (
+    <PageLoading type={pageType} refresh={fetchData} />
+  ) : (
     <View className="task">
       <View className="task__navBar"></View>
       <img

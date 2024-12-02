@@ -5,10 +5,12 @@ import {
   showToast,
   setStorage,
   redirectTo,
+  showLoading,
+  hideLoading,
 } from '@tarojs/taro';
 import { useState } from 'react';
 import { fetchLogin } from '@/services/index';
-import { checkID } from '@/utils/toll';
+import { checkID } from '@/utils/tool';
 import BlmButton from '@/components/button';
 import './index.scss';
 
@@ -29,9 +31,19 @@ export default function IdentityCode() {
       });
       return;
     }
+    showLoading({
+      title: '加载中',
+    });
     getStorage({
       key: 'blmUserCode',
-      fail: () => {},
+      fail: () => {
+        showToast({
+          title: '登陆失败',
+          icon: 'none',
+          duration: 2000,
+        });
+        hideLoading();
+      },
       success: async (res) => {
         const loginRes = await fetchLogin({
           tenantId,
@@ -57,6 +69,7 @@ export default function IdentityCode() {
             url: '/pages/task/index',
           });
         }
+        hideLoading();
       },
     });
   };

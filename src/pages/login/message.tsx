@@ -5,6 +5,8 @@ import {
   redirectTo,
   showToast,
   setStorage,
+  showLoading,
+  hideLoading,
 } from '@tarojs/taro';
 import { useEffect, useState } from 'react';
 import BlmButton from '@/components/button';
@@ -22,9 +24,19 @@ export default function Message(props) {
 
   // 确定
   const handleConfirm = () => {
+    showLoading({
+      title: '加载中',
+    });
     getStorage({
       key: 'blmUserCode',
-      fail: () => {},
+      fail: () => {
+        showToast({
+          title: '登陆失败',
+          icon: 'none',
+          duration: 2000,
+        });
+        hideLoading();
+      },
       success: async (res) => {
         const loginRes = await fetchLogin({
           tenantId,
@@ -51,6 +63,7 @@ export default function Message(props) {
             url: '/pages/task/index',
           });
         }
+        hideLoading();
       },
     });
   };
