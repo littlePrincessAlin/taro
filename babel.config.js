@@ -3,6 +3,21 @@
 module.exports = {
   presets: [
     [
+      '@babel/preset-env',
+      {
+        targets: {
+          esmodules: true,
+          android: '5',
+          ios: '9',
+          chrome: '37',
+        },
+        useBuiltIns: 'usage',
+        corejs: '3.39.0',
+      },
+    ],
+    '@babel/preset-typescript',
+    '@babel/preset-react',
+    [
       'taro',
       {
         framework: 'react',
@@ -12,6 +27,7 @@ module.exports = {
     ],
   ],
   plugins: [
+    '@babel/plugin-transform-runtime',
     [
       'import',
       {

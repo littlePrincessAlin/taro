@@ -32,7 +32,7 @@ export default defineConfig<'webpack5'>(async (merge) => {
       '@': path.resolve(__dirname, '..', 'src'),
       '@utils': path.resolve(__dirname, '..', 'src/utils'),
     },
-    plugins: ['@tarojs/plugin-html'],
+    plugins: [],
     mini: {
       postcss: {
         pxtransform: {
